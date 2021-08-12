@@ -1,0 +1,8 @@
+Mongo:
+  MongoConfig:
+    host: 192.168.49.2
+    port: 30000
+    username: mongo
+    password: mongo
+
+  db: personal_expenses
