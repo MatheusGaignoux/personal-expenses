@@ -16,7 +16,11 @@ class Nosql:
         return cls.__conn[config["Mongo"]["db"]]
     
     def last(self, collectionConnection, username):
-        return collectionConnection.find_one(filter = {"user": username}, sort = [("datetime", -1)])
+        return collectionConnection.find_one(filter = {"username": username}, sort = [("datetime", -1)])
 
     def lastUserId(self, collectionConnection):
-        return collectionConnection.find_one(projection = ["userid"], sort = [("userid", -1)])["userid"]
+        return collectionConnection.find_one(projection = ["userid"], sort = [("userid", -1)])
+    
+    def insert(self, collectionConnection, doc):
+        collectionConnection.insert_one(doc)
+        doc.pop("_id")
