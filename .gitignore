@@ -1,6 +1,8 @@
+__pycache__
 Untitled.ipynb
+venv
 .ipynb_checkpoints
 .metals
-__pycache__
 .vscode
-venv
+.pytest_cache
+
