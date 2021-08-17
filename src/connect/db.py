@@ -24,3 +24,6 @@ class Nosql:
     def insert(self, collectionConnection, doc):
         collectionConnection.insert_one(doc)
         doc.pop("_id")
+    
+    def historic(self, collectionConnection, userid):
+        return list(collectionConnection.find(filter = {"userid": userid}, sort = [("datetime", -1)]))

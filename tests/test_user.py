@@ -6,7 +6,7 @@ from os.path import dirname
 path = dirname(dirname(os.path.abspath(__file__)))
 sys.path.append(path + "/src")
 
-from user import UserEntryPoint as ep
+from user import transformUser
 
 def test_tranform_user_data():
     lastA = None
@@ -16,6 +16,6 @@ def test_tranform_user_data():
     dataB = {"username": "u.test", "name": "n.test", "income": 10000}
     dataC = {"username": "u.test", "name": "n.test", "income": 0}
 
-    assert ep.transform(0, lastA, dataA)["income"] == pytest.approx(0)
-    assert ep.transform(0, lastB, dataB)["income"] == pytest.approx(10000)
-    assert ep.transform(0, lastC, dataC) == None
+    assert transformUser(0, lastA, dataA)["income"] == pytest.approx(0)
+    assert transformUser(0, lastB, dataB)["income"] == pytest.approx(10000)
+    assert transformUser(0, lastC, dataC) == None

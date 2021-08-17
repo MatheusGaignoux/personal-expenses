@@ -1,30 +1,11 @@
 from flask_restful import Resource, reqparse
 from connect.db import Nosql
-from datetime import datetime
+from tranforms import *
 
 class UserEntryPoint:
     def getConnection(self):
         self.entrypoint = Nosql()
         self.collection = self.entrypoint.conn()["users"]
-
-    @classmethod
-    def transform(cls, id, last, data):
-        if last is None:
-            income = data.get("income", 0)
-            values = (income, 0, "usercreation")
-
-        elif data.get("income") and last.get("income", 0) != data.get("income", 0):
-            values = (data["income"], last["state"] + 1, "incomeuptade")
-
-        else:
-            return None
-
-        data["userid"] = id
-        data["datetime"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        doc = dict(list(data.items()) + list(zip(("income", "state", "eventtype"), values)))
-
-        return doc
 
 class UserPack:
     __parser = reqparse.RequestParser()
@@ -47,9 +28,12 @@ class UserAuth(Resource, UserEntryPoint):
 
         if last is None:
             lastUserId = self.entrypoint.lastUserId(self.collection)
+            userId = lastUserId.get("userid") + 1 if lastUserId else 1
             
-            doc = UserEntryPoint.transform(lastUserId.get("userid", 0) + 1 if lastUserId else 0, last, data)
+            doc = transformUser(userId, last, data)
+            exp = transformExpense(userId)
             self.entrypoint.insert(self.collection, doc)
+            self.entrypoint.insert(self.entrypoint.conn()["expenses"], exp)
 
             return  doc, 201
         else:
@@ -69,7 +53,7 @@ class UserIncome(Resource, UserEntryPoint):
             data["name"] = last["name"]
             data["username"] = username
             
-            doc = UserEntryPoint.transform(last["userid"], last, data)
+            doc = transformUser(last["userid"], last, data)
             
             if doc:
                 self.entrypoint.insert(self.collection, doc)
