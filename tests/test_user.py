@@ -18,4 +18,4 @@ def test_tranform_user_data():
 
     assert ep.transform(0, lastA, dataA)["income"] == pytest.approx(0)
     assert ep.transform(0, lastB, dataB)["income"] == pytest.approx(10000)
-    assert ep.transform(0, lastC, dataC)["income"] == None
+    assert ep.transform(0, lastC, dataC) == None

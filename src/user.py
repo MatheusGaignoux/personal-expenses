@@ -7,7 +7,8 @@ class UserEntryPoint:
         self.entrypoint = Nosql()
         self.collection = self.entrypoint.conn()["users"]
 
-    def transform(self, id, last, data):
+    @classmethod
+    def transform(cls, id, last, data):
         if last is None:
             income = data.get("income", 0)
             values = (income, 0, "usercreation")
@@ -47,7 +48,7 @@ class UserAuth(Resource, UserEntryPoint):
         if last is None:
             lastUserId = self.entrypoint.lastUserId(self.collection)
             
-            doc = self.transform(lastUserId.get("userid", 0) + 1 if lastUserId else 0, last, data)
+            doc = UserEntryPoint.transform(lastUserId.get("userid", 0) + 1 if lastUserId else 0, last, data)
             self.entrypoint.insert(self.collection, doc)
 
             return  doc, 201
@@ -68,7 +69,7 @@ class UserIncome(Resource, UserEntryPoint):
             data["name"] = last["name"]
             data["username"] = username
             
-            doc = self.transform(last["userid"], last, data)
+            doc = UserEntryPoint.transform(last["userid"], last, data)
             
             if doc:
                 self.entrypoint.insert(self.collection, doc)
