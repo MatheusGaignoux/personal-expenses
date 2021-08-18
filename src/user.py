@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from connect.db import Nosql
-from tranforms import *
+from transforms import *
 
 class UserEntryPoint:
     def getConnection(self):
