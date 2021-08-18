@@ -1,12 +1,12 @@
 from flask_restful import Resource, reqparse
 from connect.db import Nosql
-from tranforms import transformExpense
+from tranforms import expenseTransform
 
 class ExpensePack:
     def __init__(self):
         self.__parser = reqparse.RequestParser()
         self.__parser.add_argument("expenseclass", required = True, type = str)
-        self.__parser.add_argument("value", required = True, type = float)
+        self.__parser.add_argument("amount", required = True, type = float)
         self.__parser.add_argument("chargedat", required = True, type = str)
 
     def parser(self):

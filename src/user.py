@@ -30,8 +30,8 @@ class UserAuth(Resource, UserEntryPoint):
             lastUserId = self.entrypoint.lastUserId(self.collection)
             userId = lastUserId.get("userid") + 1 if lastUserId else 1
             
-            doc = transformUser(userId, last, data)
-            exp = transformExpense(userId)
+            doc = userTransform(userId, last, data)
+            exp = expenseTransform(userId)
             self.entrypoint.insert(self.collection, doc)
             self.entrypoint.insert(self.entrypoint.conn()["expenses"], exp)
 
@@ -53,7 +53,7 @@ class UserIncome(Resource, UserEntryPoint):
             data["name"] = last["name"]
             data["username"] = username
             
-            doc = transformUser(last["userid"], last, data)
+            doc = userTransform(last["userid"], last, data)
             
             if doc:
                 self.entrypoint.insert(self.collection, doc)
